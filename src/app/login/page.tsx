@@ -1,7 +1,5 @@
 "use client";
-
 import { FaGithub } from "react-icons/fa";
-// importing necessary functions
 import { signIn } from "next-auth/react";
 
 export default function Login() {
