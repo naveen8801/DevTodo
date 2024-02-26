@@ -1,8 +1,13 @@
+"use client";
 import Link from "next/link";
 import ThemeSwitcher from "./../utils/ThemeSwitcher";
 import React from "react";
+import { useSession } from "next-auth/react";
 
 const NavBar: React.FC = (): React.ReactElement => {
+  const session = useSession();
+  console.log({ session });
+
   return (
     <div className="w-full h-28 box-border flex gap-8 justify-between items-center px-16">
       <div className="text-3xl font-extrabold">

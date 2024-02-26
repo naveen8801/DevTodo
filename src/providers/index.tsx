@@ -1,16 +1,22 @@
 import React from "react";
 import LayoutProvider from "./LayoutProvider";
 import MyThemeProvider from "./ThemeProvider";
+import AuthProvider from "./AuthProvider";
+import { getServerSession } from "next-auth";
 
 interface IProp {
   children?: React.ReactNode;
 }
 
-const MainProvider: React.FC<IProp> = ({ children }): React.ReactElement => {
+const MainProvider: React.FC<IProp> = async ({ children }) => {
+  const session = await getServerSession();
+
   return (
     <div>
       <MyThemeProvider>
-        <LayoutProvider>{children}</LayoutProvider>
+        <AuthProvider session={session}>
+          <LayoutProvider>{children}</LayoutProvider>
+        </AuthProvider>
       </MyThemeProvider>
     </div>
   );
