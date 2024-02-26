@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FaGithub } from "react-icons/fa";
 
 export default function Home() {
@@ -17,10 +18,12 @@ export default function Home() {
         "Start using <strong>DevTodo</strong> today and stay on top of your
         project's tasks"
       </p>
-      <div className="px-4 py-2 bg-buttonBgColor rounded-lg text-black flex items-center justify-center gap-2 hover:cursor-pointer hover:font-medium">
-        <FaGithub size={20} />
-        Let's Go
-      </div>
+      <Link href="/login">
+        <div className="px-4 py-2 bg-buttonBgColor rounded-lg text-black flex items-center justify-center gap-2 hover:cursor-pointer hover:font-medium">
+          <FaGithub size={20} />
+          Let's Go
+        </div>
+      </Link>
     </div>
   );
 }
