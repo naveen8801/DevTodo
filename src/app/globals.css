@@ -12,3 +12,9 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer base {
+  :root[class~="dark"] {
+    background-color: #040d12;
+  }
+}
