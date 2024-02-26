@@ -1,6 +1,6 @@
 import Link from "next/link";
-import ThemeSwitcher from "./../utils/ThemeSwitcher";
 import React from "react";
+import NavBarItems from "./NavBarItems";
 
 const NavBar: React.FC = (): React.ReactElement => {
   return (
@@ -9,14 +9,7 @@ const NavBar: React.FC = (): React.ReactElement => {
         <span className="text-primaryColor">Dev</span>
         <span>Todo</span>
       </div>
-      <div className="flex items-center justify-center gap-8">
-        <Link href="/login">
-          <div className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor">
-            Sign In
-          </div>
-        </Link>
-        <ThemeSwitcher />
-      </div>
+      <NavBarItems />
     </div>
   );
 };
