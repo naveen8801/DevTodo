@@ -9,7 +9,7 @@ const NavBarItems: React.FC = (): React.ReactElement => {
   const session = useSession();
   const isAuthenticated = session.status === "authenticated" ? true : false;
   const data = session.data;
-
+  console.log({ session });
   const handleSignOut = () => {
     signOut();
   };
