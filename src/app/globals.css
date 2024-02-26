@@ -15,6 +15,6 @@ body {
 
 @layer base {
   :root[class~="dark"] {
-    background-color: #040d12;
+    background-color: #1B2430;
   }
 }
