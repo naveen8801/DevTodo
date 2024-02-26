@@ -15,7 +15,7 @@ const NavBar: React.FC = (): React.ReactElement => {
             Sign In
           </div>
         </Link>
-        <ThemeSwitcher />s
+        <ThemeSwitcher />
       </div>
     </div>
   );
