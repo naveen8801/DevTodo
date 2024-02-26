@@ -1,9 +1,13 @@
 "use client";
 
 import { FaGithub } from "react-icons/fa";
+// importing necessary functions
+import { signIn } from "next-auth/react";
 
 export default function Login() {
-  const handleSignIn = () => {};
+  const handleSignIn = () => {
+    signIn("github");
+  };
 
   return (
     <div className="h-full flex flex-col items-center justify-center">
