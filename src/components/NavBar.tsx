@@ -8,7 +8,12 @@ const NavBar: React.FC = (): React.ReactElement => {
         <span className="text-primaryColor">Dev</span>
         <span>Todo</span>
       </div>
-      <ThemeSwitcher />
+      <div className="flex items-center justify-center gap-8">
+        <div className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor">
+          Sign In
+        </div>
+        <ThemeSwitcher />
+      </div>
     </div>
   );
 };
