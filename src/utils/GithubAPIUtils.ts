@@ -21,6 +21,7 @@ export const refactorRepositorySearchResultList = (
     return {
       id: result?.sha,
       name: result?.name,
+      path: result?.path,
       url: result?.html_url,
       git_url: result?.git_url,
     };
