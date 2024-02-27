@@ -25,6 +25,8 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// TODO: verify
+
 mongoose.models = {};
 
 const User = mongoose.model("users", schema);
