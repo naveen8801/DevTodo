@@ -1,4 +1,7 @@
-import { refactorRepositoryList } from "@/utils/GithubAPIUtils";
+import {
+  refactorRepositoryList,
+  refactorRepositorySearchResultList,
+} from "@/utils/GithubAPIUtils";
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
@@ -31,10 +34,13 @@ export async function GET(
     if (token?.accessToken) {
       const fullRepoId = repoId?.join("/");
       const res = await githubAPI.get(
-        `search/code?q=TODO+repo:${fullRepoId}`,
+        `search/code?q=TODO+repo:${encodeURIComponent(fullRepoId)}`,
         authorizationConf(token.accessToken as string)
       );
-      return Response.json({ data: res.data }, { status: 200 });
+      const refactoredResult = refactorRepositorySearchResultList(
+        res.data?.items || []
+      );
+      return Response.json({ data: refactoredResult }, { status: 200 });
     } else {
       return Response.json(
         { msg: "No access token found. Please sign out and sign in again" },

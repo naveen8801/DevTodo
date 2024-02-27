@@ -1,5 +1,4 @@
 export const refactorRepositoryList = (repositoryList: any[]) => {
-  console.log({ repositoryList });
   return repositoryList.map((repo) => {
     return {
       id: repo?.id,
@@ -11,6 +10,19 @@ export const refactorRepositoryList = (repositoryList: any[]) => {
       created_at: repo?.created_at,
       updated_at: repo?.updated_at,
       archived: repo?.archived,
+    };
+  });
+};
+
+export const refactorRepositorySearchResultList = (
+  repositorySearchList: any[]
+) => {
+  return repositorySearchList.map((result) => {
+    return {
+      id: result?.sha,
+      name: result?.name,
+      url: result?.html_url,
+      git_url: result?.git_url,
     };
   });
 };
