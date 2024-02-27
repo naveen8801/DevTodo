@@ -1,6 +1,7 @@
 import User from "@/Models/User";
 import axios from "axios";
 import { signIn, signOut } from "next-auth/react";
+import { revalidatePath } from "next/cache";
 
 /**
  * Function to handle GitHub sign-in.
@@ -21,9 +22,10 @@ export const handleGithubSignOut = async () => {
 };
 
 /**
- * Retrieves user data from the "/api/user" endpoint using axios.
+ * Retrieves a user by their email address and returns an object containing either the user data or an error message.
  *
- * @return {Promise<object>} An object containing the retrieved user data or an error object.
+ * @param {string} email - The email address of the user to retrieve
+ * @return {Promise<{ data: User } | { error: string }>} An object containing either the user data or an error message
  */
 export const getUser = async (email: string) => {
   try {
@@ -31,6 +33,7 @@ export const getUser = async (email: string) => {
     if (!user) {
       return { error: "No user found with this email " };
     }
+    revalidatePath("/dashboard");
     return { data: user };
   } catch (error) {
     return { error: error!.toString() };
