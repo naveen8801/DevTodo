@@ -1,4 +1,5 @@
 "use client";
+import { handleGithubSignOut } from "@/actions";
 import ThemeSwitcher from "@/utils/ThemeSwitcher";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -10,9 +11,6 @@ const NavBarItems: React.FC = (): React.ReactElement => {
   const isAuthenticated = session.status === "authenticated" ? true : false;
   const data = session.data;
   console.log({ session });
-  const handleSignOut = () => {
-    signOut();
-  };
 
   return (
     <div className="flex items-center justify-center gap-8">
@@ -25,19 +23,15 @@ const NavBarItems: React.FC = (): React.ReactElement => {
       )}
 
       {isAuthenticated && (
-        <div
-          onClick={handleSignOut}
-          className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor"
-        >
-          Sign Out
-        </div>
+        <form action={handleGithubSignOut}>
+          <button className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor">
+            Sign Out
+          </button>
+        </form>
       )}
 
       {isAuthenticated && (
-        <div
-          onClick={handleSignOut}
-          className="text-lg font-semibold text-primaryColor flex items-center justify-center gap-2"
-        >
+        <div className="text-lg font-semibold text-primaryColor flex items-center justify-center gap-2">
           <span>
             <Image
               className="rounded-full"
