@@ -1,3 +1,4 @@
+import { refactorRepositoryList } from "@/utils/GithubAPIUtils";
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
@@ -33,7 +34,8 @@ export async function GET(req: NextApiRequest) {
         `user/installations/${installation_id}/repositories`,
         authorizationConf(token.accessToken as string)
       );
-      return Response.json({ msg: res?.data }, { status: 200 });
+      const repos = refactorRepositoryList(res?.data?.repositories || []);
+      return Response.json({ data: repos }, { status: 200 });
     } else {
       return Response.json(
         { msg: "No access token found. Please sign out and sign in again" },
