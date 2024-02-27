@@ -13,10 +13,13 @@ export async function GET(request: Request) {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return NextResponse.json({ msg: "No user with this email" });
+      return NextResponse.json(
+        { msg: "No user with this email" },
+        { status: 401 }
+      );
     }
-    return NextResponse.json({ data: user });
+    return NextResponse.json({ data: user }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error });
+    return NextResponse.json({ msg: error }, { status: 500 });
   }
 }
