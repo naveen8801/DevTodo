@@ -1,3 +1,4 @@
+import { getUser } from "@/actions";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -9,6 +10,7 @@ const Dashboard = async () => {
   if (!session) {
     redirect("/login");
   }
+  const user = await getUser(session.user?.email!);
 
   return (
     <div>
