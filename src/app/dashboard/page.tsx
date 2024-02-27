@@ -18,7 +18,7 @@ const Dashboard = async () => {
   if (!installationId) {
     return (
       <div className="h-full flex flex-col items-center justify-center gap-2">
-        <span>
+        <span className="text-center">
           Hi {name?.trim() || "User"}, Please click on following button to
           install <strong className="text-primaryColor">DevTodo</strong> github
           app
