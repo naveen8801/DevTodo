@@ -10,7 +10,6 @@ const NavBarItems: React.FC = (): React.ReactElement => {
   const session = useSession();
   const isAuthenticated = session.status === "authenticated" ? true : false;
   const data = session.data;
-  console.log({ session });
 
   return (
     <div className="flex items-center justify-center gap-8">

@@ -1,4 +1,5 @@
 import User from "@/Models/User";
+import connectDB from "@/utils/ConnectDB";
 import axios from "axios";
 import { signIn, signOut } from "next-auth/react";
 import { revalidatePath } from "next/cache";
@@ -29,6 +30,7 @@ export const handleGithubSignOut = async () => {
  */
 export const getUser = async (email: string) => {
   try {
+    connectDB();
     const user = await User.findOne({ email });
     if (!user) {
       return { error: "No user found with this email " };
