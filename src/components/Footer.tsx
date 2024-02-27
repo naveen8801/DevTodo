@@ -10,7 +10,6 @@ const Footer: React.FC = (): React.ReactElement => {
         target="_blank"
         className="flex gap-2 items-center justify-center text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor"
       >
-        Source Code
         <FaGithub size={28} />
       </Link>
     </div>

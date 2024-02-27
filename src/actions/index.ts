@@ -1,4 +1,4 @@
-import User from "@/Models/User";
+import User from "@/models/User";
 import connectDB from "@/utils/ConnectDB";
 import axios from "axios";
 import { signIn, signOut } from "next-auth/react";
