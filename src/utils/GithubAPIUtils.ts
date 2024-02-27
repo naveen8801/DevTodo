@@ -4,6 +4,7 @@ export const refactorRepositoryList = (repositoryList: any[]) => {
     return {
       id: repo?.id,
       name: repo?.name,
+      fullName: repo?.full_name,
       description: repo.description || "",
       isPrivate: repo?.private,
       url: repo?.html_url,
