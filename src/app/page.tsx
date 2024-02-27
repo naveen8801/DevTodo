@@ -1,7 +1,17 @@
+import { getServerSession } from "next-auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 
-export default function Home() {
+export default async function Home() {
+  // Get session from server
+  const session = await getServerSession();
+
+  // If no session then redirect to login
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="h-full flex flex-col items-center justify-center gap-8">
       <div className="text-left text-4xl md:text-6xl font-extrabold text-primaryColor">

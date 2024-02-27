@@ -1,9 +1,16 @@
 "use client";
 import { FaGithub } from "react-icons/fa";
-import { signIn } from "next-auth/react";
 import { handleGithubSignIn } from "@/actions";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Login() {
+  const session = useSession();
+
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="h-full flex flex-col items-center justify-center">
       <form action={handleGithubSignIn}>
