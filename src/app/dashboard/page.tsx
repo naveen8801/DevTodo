@@ -87,7 +87,7 @@ const Dashboard = async ({ searchParams }: { searchParams: ISearchParams }) => {
           </div>
         </div>
       </div>
-      <RepositoryViewer />
+      <RepositoryViewer installation_id={installationId} />
     </div>
   );
 };
