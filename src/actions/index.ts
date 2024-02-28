@@ -67,3 +67,14 @@ export const handleUpdateUserInstallationId = async (
     return { error: error!.toString() };
   }
 };
+
+export const handleGetRepositoryList = async (installation_id: string) => {
+  try {
+    const { data } = await axios.get(
+      `/api/repo?installation_id=${installation_id}`
+    );
+    return { data: data.data };
+  } catch (error) {
+    return { error: error!.toString() };
+  }
+};

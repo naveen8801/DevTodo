@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, Suspense, useState } from "react";
 import SearchField from "./SearchField";
 import RepositoryList from "./RepositoryList";
 
@@ -21,10 +21,14 @@ const RepositoryViewer: React.FC<IProp> = (props): ReactElement => {
             setSearchValue(e.target.value);
           }}
         />
-        <span className="text-slate-500 text-xs font-bold dark:text-slate-400">{`Results Found : ${0}`}</span>
       </div>
-      <div className="my-4 bg-black h-8 p-2 box-border">
-        <RepositoryList installation_id={installation_id} />
+      <div className="my-2 py-2 box-border">
+        <Suspense fallback={<>Loading Repositories...</>}>
+          <RepositoryList
+            installation_id={installation_id}
+            searchValue={searchValue}
+          />
+        </Suspense>
       </div>
     </div>
   );

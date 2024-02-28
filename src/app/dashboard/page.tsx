@@ -39,13 +39,13 @@ const Dashboard = async ({ searchParams }: { searchParams: ISearchParams }) => {
   // Fetch current user from DB using email from session
   const { data, error } = await handleGetUser(session.user?.email!);
 
-  if (error) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center">
-        <ErrorText>{error}</ErrorText>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="h-full flex flex-col items-center justify-center">
+  //       <ErrorText>{error}</ErrorText>
+  //     </div>
+  //   );
+  // }
 
   const { installationId, name, updatedAt, createdAt } = data as IUser;
 
