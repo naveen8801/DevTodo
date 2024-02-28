@@ -14,17 +14,22 @@ const RepositoryList: React.FC<IProp> = async (
 
   const { data, error } = await handleGetRepositoryList(installation_id);
 
-//   if (error) {
-//     return (
-//       <div className="h-full flex flex-col items-center justify-center">
-//         <ErrorText>{error}</ErrorText>
-//       </div>
-//     );
-//   }
+  //   if (error) {
+  //     return (
+  //       <div className="h-full flex flex-col items-center justify-center">
+  //         <ErrorText>{error}</ErrorText>
+  //       </div>
+  //     );
+  //   }
 
   return (
     <div>
       <span className="text-slate-500 text-xs font-semibold dark:text-slate-400 mb-2">{`Total Results Found : ${0}`}</span>
+      {(!data ||
+        data?.filter((itm: any) => itm?.fullName?.includes(searchValue?.trim()))
+          ?.length === 0) && (
+        <div className="text-center font-semibold">No Repository Found</div>
+      )}
       {data
         ?.filter((itm: any) => itm?.fullName?.includes(searchValue?.trim()))
         ?.map((repo: any) => (
