@@ -1,13 +1,15 @@
 import { handleGetUser, handleUpdateUserInstallationId } from "@/actions";
 import ErrorText from "@/components/ErrorText";
 import InstallationHandler from "@/components/InstallationHandler";
+import RepositoryViewer from "@/components/RepositoryViewer";
 import { IUser } from "@/types";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/router";
 import React from "react";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaUserPlus, FaUserClock } from "react-icons/fa";
+import moment from "moment";
 
 type ISearchParams = {
   installation_id: string;
@@ -45,7 +47,7 @@ const Dashboard = async ({ searchParams }: { searchParams: ISearchParams }) => {
     );
   }
 
-  const { installationId, name } = data as IUser;
+  const { installationId, name, updatedAt, createdAt } = data as IUser;
 
   if (!installationId) {
     return (
@@ -64,16 +66,28 @@ const Dashboard = async ({ searchParams }: { searchParams: ISearchParams }) => {
       </div>
     );
   }
-
+  console.log({ data });
   return (
-    <div className="h-full flex flex-col items-center justify-center">
-      <div>{installationId}</div>
-      <Link href={process.env.GITHUB_PUBLIC_URL!}>
-        <button className="px-4 py-2 text-black rounded-lg flex items-center justify-center gap-2 bg-buttonBgColor hover:cursor-pointer hover:font-medium">
-          <FaGithub size={20} />
-          Configure Github App
-        </button>
-      </Link>
+    <div className="h-full">
+      <div className="w-full flex flex-col  md:flex-row md:items-center md:justify-start gap-4 mb-4">
+        <Link href={process.env.GITHUB_PUBLIC_URL!}>
+          <button className="w-full px-4 py-2 text-black rounded-lg flex items-center justify-center gap-2 bg-buttonBgColor hover:cursor-pointer hover:font-medium">
+            <FaGithub size={20} />
+            Configure Github App
+          </button>
+        </Link>
+        <div className="flex flex-row items-center justify-between gap-3 text-slate-500 text-xs dark:text-slate-400">
+          <div className=" flex items-center gap-1">
+            <FaUserPlus size={15} />
+            {`User Created: ${moment(createdAt).fromNow()}`}
+          </div>
+          <div className="flex items-center gap-1">
+            <FaUserClock size={15} />
+            {`Last Modified: ${moment(updatedAt).fromNow()}`}
+          </div>
+        </div>
+      </div>
+      <RepositoryViewer />
     </div>
   );
 };
