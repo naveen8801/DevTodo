@@ -2,6 +2,7 @@
 import React, { ReactElement, Suspense, useState } from "react";
 import SearchField from "./SearchField";
 import RepositoryList from "./RepositoryList";
+import RepositoryListLoading from "./RepositoryListLoading";
 
 interface IProp {
   installation_id: string;
@@ -23,7 +24,7 @@ const RepositoryViewer: React.FC<IProp> = (props): ReactElement => {
         />
       </div>
       <div className="my-2 py-2 box-border">
-        <Suspense fallback={<>Loading Repositories...</>}>
+        <Suspense fallback={<RepositoryListLoading />}>
           <RepositoryList
             installation_id={installation_id}
             searchValue={searchValue}
