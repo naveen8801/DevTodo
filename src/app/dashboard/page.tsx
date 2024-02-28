@@ -66,10 +66,10 @@ const Dashboard = async ({ searchParams }: { searchParams: ISearchParams }) => {
       </div>
     );
   }
-  console.log({ data });
+
   return (
-    <div className="h-full">
-      <div className="w-full flex flex-col  md:flex-row md:items-center md:justify-start gap-4 mb-4">
+    <div className="h-full box-border">
+      <div className="w-full h-fit flex flex-col  md:flex-row md:items-center md:justify-start gap-4 mb-4">
         <Link href={process.env.GITHUB_PUBLIC_URL!}>
           <button className="w-full px-4 py-2 text-black rounded-lg flex items-center justify-center gap-2 bg-buttonBgColor hover:cursor-pointer hover:font-medium">
             <FaGithub size={20} />
