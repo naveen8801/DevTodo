@@ -1,6 +1,7 @@
 import { handleGetRepositoryList } from "@/actions";
 import React, { useMemo } from "react";
 import ErrorText from "./ErrorText";
+import RepositoryCard from "./RepositoryCard";
 
 interface IProp {
   installation_id: string;
@@ -24,7 +25,10 @@ const RepositoryList: React.FC<IProp> = async (
 
   return (
     <div>
-      <span className="text-slate-500 text-xs font-semibold dark:text-slate-400 mb-2">{`Total Results Found : ${0}`}</span>
+      <span className="text-slate-500 text-xs font-semibold dark:text-slate-400 mb-2">{`Total Results Found : ${
+        data?.filter((itm: any) => itm?.fullName?.includes(searchValue?.trim()))
+          ?.length || 0
+      }`}</span>
       {(!data ||
         data?.filter((itm: any) => itm?.fullName?.includes(searchValue?.trim()))
           ?.length === 0) && (
@@ -33,10 +37,7 @@ const RepositoryList: React.FC<IProp> = async (
       {data
         ?.filter((itm: any) => itm?.fullName?.includes(searchValue?.trim()))
         ?.map((repo: any) => (
-          <div key={repo?.id}>
-            {repo?.fullName}
-            {repo?.description}
-          </div>
+          <RepositoryCard {...repo} />
         ))}
     </div>
   );
