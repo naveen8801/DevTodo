@@ -13,7 +13,7 @@ const RepositoryViewer: React.FC<IProp> = (props): ReactElement => {
   const [searchValue, setSearchValue] = useState<string>("");
 
   return (
-    <div className="w-full h-3/4 box-border rounded-lg p-4 overflow-auto shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] dark:border dark:border-slate-500">
+    <div className="w-full h-[90%] box-border rounded-lg p-4 overflow-auto shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] dark:border dark:border-slate-500">
       <div>
         <SearchField
           value={searchValue}

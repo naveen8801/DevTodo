@@ -1,5 +1,7 @@
+import moment from "moment";
+
 export const refactorRepositoryList = (repositoryList: any[]) => {
-  return repositoryList.map((repo) => {
+  let repos = repositoryList.map((repo) => {
     return {
       id: repo?.id,
       name: repo?.name,
@@ -12,6 +14,11 @@ export const refactorRepositoryList = (repositoryList: any[]) => {
       archived: repo?.archived,
     };
   });
+  // Sort by modified_at
+  const sorted = repos.sort((a: any, b: any) =>
+    moment(b.updated_at).diff(a.updated_at)
+  );
+  return sorted;
 };
 
 export const refactorRepositorySearchResultList = (
