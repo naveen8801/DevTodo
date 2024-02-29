@@ -31,7 +31,7 @@ const RepositoryCard: React.FC<IProp> = (props): React.ReactElement => {
   } = props;
 
   return (
-    <div className="w-full px-4 py-2 rounded-lg my-2 h-20 box-border shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] dark:border dark:border-slate-500 hover:cursor-pointer hover:bg-slate-100 dark:hover:hover:bg-slate-800 ">
+    <div className="w-full px-4 py-2 rounded-lg my-2 min-h-20 box-border shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] dark:border dark:border-slate-500 hover:cursor-pointer hover:bg-slate-100 dark:hover:hover:bg-slate-800 ">
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center justify-between gap-2">
           {isPrivate && <FaLock size={18} />}
@@ -48,7 +48,7 @@ const RepositoryCard: React.FC<IProp> = (props): React.ReactElement => {
           description?.length! > 100 ? "..." : ""
         }`}
       </div>
-      <div className="flex flex-row items-center justify-end gap-3 text-slate-500 text-xs dark:text-slate-400">
+      <div className="flex flex-row items-center justify-end gap-3 text-slate-500 text-xs dark:text-slate-400 mt-2">
         <div className="flex items-center gap-1">
           <FaUserClock size={15} />
           {`Last Modified: ${moment(updated_at).fromNow()}`}
