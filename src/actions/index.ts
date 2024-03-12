@@ -68,6 +68,12 @@ export const handleUpdateUserInstallationId = async (
   }
 };
 
+/**
+ * Function to get all repo from through user's github account (user must have installed DevTodo github app)
+ *
+ * @param {string} installation_id - The installation ID of github app
+ * @return {Promise<{ data: any } | { error: string }>} Response from github API
+ */
 export const handleGetRepositoryList = async (installation_id: string) => {
   try {
     const { data } = await axios.get(
@@ -75,6 +81,22 @@ export const handleGetRepositoryList = async (installation_id: string) => {
     );
     return { data: data.data };
   } catch (error) {
+    return { error: error!.toString() };
+  }
+};
+
+/**
+ * Function to search a repo for TODOs comments
+ *
+ * @param {string} repoId - Name of repo
+ * @return {Promise<{ data: any } | { error: string }>} Response from github API
+ */
+export const handleSearchRepo = async (repoId: string) => {
+  try {
+    const { data } = await axios.get(`/api/repo/${repoId}`);
+    return { data: data.data };
+  } catch (error) {
+    console.log({ error });
     return { error: error!.toString() };
   }
 };

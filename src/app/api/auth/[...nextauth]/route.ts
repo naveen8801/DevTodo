@@ -1,7 +1,7 @@
 import connectDB from "@/utils/ConnectDB";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import User from "@/Models/User";
+import User from "./../../../../models/User";
 
 const handler = NextAuth({
   providers: [
