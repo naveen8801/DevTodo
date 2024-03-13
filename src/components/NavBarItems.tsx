@@ -1,7 +1,6 @@
 "use client";
-import { handleGithubSignOut } from "@/actions";
 import ThemeSwitcher from "@/utils/ThemeSwitcher";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -22,11 +21,14 @@ const NavBarItems: React.FC = (): React.ReactElement => {
       )}
 
       {isAuthenticated && (
-        <form action={handleGithubSignOut}>
-          <button className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor">
-            Sign Out
-          </button>
-        </form>
+        <button
+          onClick={async () => {
+            await signOut();
+          }}
+          className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor"
+        >
+          Sign Out
+        </button>
       )}
 
       {isAuthenticated && (

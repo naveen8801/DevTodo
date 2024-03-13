@@ -21,6 +21,7 @@ const Repo: React.FC<IProp> = async ({
   }
 
   const { data, error } = await handleSearchRepo(`${repo[0]}/${repo[1]}`);
+  console.log({ data });
 
   return <div>{`${repo[0]}/${repo[1]}`}</div>;
 };

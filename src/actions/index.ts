@@ -1,26 +1,31 @@
+"use server";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth, config } from "@/auth";
 import User from "@/models/User";
 import connectDB from "@/utils/ConnectDB";
+import {
+  refactorRepositoryList,
+  refactorRepositorySearchResultList,
+} from "@/utils/GithubAPIUtils";
 import axios from "axios";
+import { getServerSession } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-/**
- * Function to handle GitHub sign-in.
- *
- * @return {Promise<void>} A promise that resolves when the sign-in is complete.
- */
-export const handleGithubSignIn = async () => {
-  await signIn("github");
-};
+const githubAPI = axios.create({
+  baseURL: "https://api.github.com",
+  headers: {
+    Accept: "application/vnd.github.v3+json",
+  },
+});
 
-/**
- * Function to handle signing out from Github.
- *
- */
-
-export const handleGithubSignOut = async () => {
-  await signOut();
+const authorizationConf = (access_token: string) => {
+  return {
+    headers: {
+      authorization: `token ${access_token}`,
+    },
+  };
 };
 
 /**
@@ -76,10 +81,22 @@ export const handleUpdateUserInstallationId = async (
  */
 export const handleGetRepositoryList = async (installation_id: string) => {
   try {
-    const { data } = await axios.get(
-      `/api/repo?installation_id=${installation_id}`
-    );
-    return { data: data.data };
+    if (!installation_id) {
+      throw new Error("No installation Id passed");
+    }
+    const { token }: any = await getServerSession(authOptions);
+    if (token) {
+      const res = await githubAPI.get(
+        `user/installations/${installation_id}/repositories`,
+        authorizationConf(token as string)
+      );
+      const repos = refactorRepositoryList(res?.data?.repositories || []);
+      return { data: repos };
+    } else {
+      throw new Error(
+        "No access token found. Please sign out and sign in again"
+      );
+    }
   } catch (error) {
     return { error: error!.toString() };
   }
@@ -93,10 +110,43 @@ export const handleGetRepositoryList = async (installation_id: string) => {
  */
 export const handleSearchRepo = async (repoId: string) => {
   try {
-    const { data } = await axios.get(`/api/repo/${repoId}`);
-    return { data: data.data };
+    if (!repoId) {
+      throw new Error("No repoId passed");
+    }
+    const { token }: any = await getServerSession(authOptions);
+    if (token) {
+      const fullRepoId = repoId;
+      const res = await githubAPI.get(
+        `search/code?q=TODO+repo:${encodeURIComponent(fullRepoId)}`,
+        authorizationConf(token as string)
+      );
+      const refactoredResult = refactorRepositorySearchResultList(
+        res.data?.items || []
+      );
+      return { data: refactoredResult };
+    } else {
+      throw new Error(
+        "No access token found. Please sign out and sign in again"
+      );
+    }
   } catch (error) {
-    console.log({ error });
     return { error: error!.toString() };
   }
+};
+
+const getGithubBlob = async (blob_url: string) => {
+  try {
+    if (!blob_url) {
+      throw new Error("Invalid github blob URL passed");
+    }
+    const { token }: any = await getServerSession(authOptions);
+    if (token) {
+      const res = await axios.get(blob_url, authorizationConf(token as string));
+      return { data: res.data?.content };
+    } else {
+      throw new Error(
+        "No access token found. Please sign out and sign in again"
+      );
+    }
+  } catch (error) {}
 };
