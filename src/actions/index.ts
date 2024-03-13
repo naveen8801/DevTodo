@@ -134,7 +134,13 @@ export const handleSearchRepo = async (repoId: string) => {
   }
 };
 
-const getGithubBlob = async (blob_url: string) => {
+/**
+ * Function to fetch repo
+ *
+ * @param {string} blob_url - Blob URL to fetch
+ * @return {Promise<{ data: any } | { error: string }>} Response from github API
+ */
+export const getGithubBlob = async (blob_url: string) => {
   try {
     if (!blob_url) {
       throw new Error("Invalid github blob URL passed");
@@ -148,5 +154,7 @@ const getGithubBlob = async (blob_url: string) => {
         "No access token found. Please sign out and sign in again"
       );
     }
-  } catch (error) {}
+  } catch (error) {
+    return { error: error!.toString() };
+  }
 };

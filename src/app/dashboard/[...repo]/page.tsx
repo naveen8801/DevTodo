@@ -31,6 +31,11 @@ const Repo: React.FC<IProp> = async ({
           No TODOs Found !
         </span>
       )}
+      {data?.length! > 0 && (
+        <span className="text-slate-500 text-xs font-semibold dark:text-slate-400 mb-2">
+          {`Found ${data?.length} TODOs`}
+        </span>
+      )}
       {data?.map((itm) => (
         <BlobCard key={itm?.id} {...itm} />
       ))}
