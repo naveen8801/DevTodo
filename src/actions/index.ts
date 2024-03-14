@@ -4,6 +4,7 @@ import { auth, config } from "@/auth";
 import User from "@/models/User";
 import connectDB from "@/utils/ConnectDB";
 import {
+  buildGitHubIssueBody,
   refactorRepositoryList,
   refactorRepositorySearchResultList,
 } from "@/utils/GithubAPIUtils";
@@ -120,6 +121,7 @@ export const handleSearchRepo = async (repoId: string) => {
         `search/code?q=TODO+repo:${encodeURIComponent(fullRepoId)}`,
         authorizationConf(token as string)
       );
+
       const refactoredResult = refactorRepositorySearchResultList(
         res.data?.items || []
       );
@@ -155,6 +157,39 @@ export const getGithubBlob = async (blob_url: string) => {
       );
     }
   } catch (error) {
+    return { error: error!.toString() };
+  }
+};
+
+export const handleOpenGithubIssueInRepo = async (data: any) => {
+  try {
+    const owner: string = data?.owner?.login;
+    const title: string = `[DevTodo] : Here's a TODO inside ${data?.path}`;
+    const repo: string = data?.repo?.split("/")[1];
+    const body: string = buildGitHubIssueBody(data);
+    let payload = {
+      owner,
+      repo,
+      title,
+      body,
+      labels: ["DevTODO", "Reminder"],
+    };
+    const { token }: any = await getServerSession(authOptions);
+    if (token) {
+      const res = await githubAPI.post(
+        `/repos/${owner}/${repo}/issues`,
+        payload,
+        authorizationConf(token as string)
+      );
+      console.log({ res });
+      return { data: res.data?.content };
+    } else {
+      throw new Error(
+        "No access token found. Please sign out and sign in again"
+      );
+    }
+  } catch (error) {
+    console.log(error);
     return { error: error!.toString() };
   }
 };

@@ -22,7 +22,6 @@ const Repo: React.FC<IProp> = async ({
   }
 
   const { data, error } = await handleSearchRepo(`${repo[0]}/${repo[1]}`);
-  console.log({ data, error });
 
   return (
     <div className=" h-full box-border rounded-lg p-4 overflow-auto">

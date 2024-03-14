@@ -17,7 +17,9 @@ const BlobViewer: React.FC<IProp> = async (
 
   return (
     <div className="h-32 overflow-auto p-4">
-      <pre className="text-xs">{atob(data)}</pre>
+      <pre className="text-xs dark:text-slate-300">
+        {data ? atob(data) : ""}
+      </pre>
     </div>
   );
 };
