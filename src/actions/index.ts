@@ -180,7 +180,6 @@ export const handleOpenGithubIssueInRepo = async (data: any) => {
         payload,
         authorizationConf(token as string)
       );
-      console.log({ res });
       return { data: res.data?.content };
     } else {
       throw new Error(
