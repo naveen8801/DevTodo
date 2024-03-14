@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { config } from "@/auth";
 import User from "@/User";
 import connectDB from "@/utils/ConnectDB";
 import {
@@ -83,7 +83,7 @@ export const handleGetRepositoryList = async (installation_id: string) => {
     if (!installation_id) {
       throw new Error("No installation Id passed");
     }
-    const { token }: any = await getServerSession(authOptions);
+    const { token }: any = await getServerSession(config);
     if (token) {
       const res = await githubAPI.get(
         `user/installations/${installation_id}/repositories`,
@@ -112,7 +112,7 @@ export const handleSearchRepo = async (repoId: string) => {
     if (!repoId) {
       throw new Error("No repoId passed");
     }
-    const { token }: any = await getServerSession(authOptions);
+    const { token }: any = await getServerSession(config);
     if (token) {
       const fullRepoId = repoId;
       const res = await githubAPI.get(
@@ -145,7 +145,7 @@ export const getGithubBlob = async (blob_url: string) => {
     if (!blob_url) {
       throw new Error("Invalid github blob URL passed");
     }
-    const { token }: any = await getServerSession(authOptions);
+    const { token }: any = await getServerSession(config);
     if (token) {
       const res = await axios.get(blob_url, authorizationConf(token as string));
       return { data: res.data?.content };
@@ -172,7 +172,7 @@ export const handleOpenGithubIssueInRepo = async (data: any) => {
       body,
       labels: ["DevTODO", "Reminder"],
     };
-    const { token }: any = await getServerSession(authOptions);
+    const { token }: any = await getServerSession(config);
     if (token) {
       const res = await githubAPI.post(
         `/repos/${owner}/${repo}/issues`,
