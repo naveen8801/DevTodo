@@ -1,5 +1,5 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import User from "@/models/User";
+import User from "@/User";
 import connectDB from "@/utils/ConnectDB";
 import {
   buildGitHubIssueBody,

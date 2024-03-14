@@ -6,7 +6,7 @@ import type {
 import type { NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import User from "@/models/User";
+import User from "@/User";
 import connectDB from "@/utils/ConnectDB";
 
 // You'll need to import and pass this
