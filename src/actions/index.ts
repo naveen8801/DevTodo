@@ -8,9 +8,7 @@ import {
 } from "@/utils/GithubAPIUtils";
 import axios from "axios";
 import { getServerSession } from "next-auth";
-import { signIn, signOut } from "next-auth/react";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 const githubAPI = axios.create({
   baseURL: "https://api.github.com",
