@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { FaLock } from "react-icons/fa6";
 import { FaExternalLinkAlt, FaUserPlus, FaUserClock } from "react-icons/fa";

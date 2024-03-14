@@ -1,3 +1,4 @@
+"use server";
 import { handleGetRepositoryList } from "@/actions";
 import React, { useMemo } from "react";
 import ErrorText from "./ErrorText";
