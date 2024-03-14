@@ -39,14 +39,14 @@ export const refactorRepositorySearchResultList = (
 };
 
 export const buildGitHubIssueBody = (data: any): string => {
-  const { owner, name, path }: any = data;
+  const { owner, name, path, url }: any = data;
 
-  const res = `Hi ${owner?.login || "User"}\n
-  \n
-  This github issue has been opened to remind you about a TODO in this repository. Please check ${name} at ${path} for more information.
-  \n
-  Thanks
-  DevTODO
+  const res = `Hi **${owner?.login}**,
+
+This github issue has been opened to remind you about a TODO in this repository. Please check ${name} at [${path}](${url}) for more information.
+
+Thanks
+Issue Created using **[DevTODO](${process.env.APP_URL})**
   `;
 
   return res;
