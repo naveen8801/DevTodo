@@ -38,7 +38,7 @@ const RepositoryList: React.FC<IProp> = async (
       {data
         ?.filter((itm: any) => itm?.fullName?.includes(searchValue?.trim()))
         ?.map((repo: any) => (
-          <RepositoryCard {...repo} />
+          <RepositoryCard {...repo} key={repo?.id} />
         ))}
     </div>
   );

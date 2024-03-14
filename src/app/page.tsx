@@ -25,8 +25,8 @@ export default async function Home() {
         tasks in your project, ensuring that nothing slips through the cracks.
       </p>
       <p className="italic text-center">
-        "Start using <strong>DevTodo</strong> today and stay on top of your
-        project's tasks"
+        Start using <strong>DevTodo</strong> today and stay on top of your
+        project's tasks
       </p>
       <Link href="/login">
         <div className="px-4 py-2 bg-buttonBgColor rounded-lg text-black flex items-center justify-center gap-2 hover:cursor-pointer hover:font-medium">
