@@ -21,8 +21,8 @@ export default async function Home() {
       <p className=" text-slate-600 dark:text-slate-400 text-justify text-md">
         <strong>DevTodo</strong> is a simple tool that scans your GitHub
         repository for TODO comments in your code and lists them in an organized
-        manner. With Todo Finder, you can easily keep track of all the pending
-        tasks in your project, ensuring that nothing slips through the cracks.
+        manner. With DevTodo, you can easily keep track of all the pending tasks
+        in your project, ensuring that nothing slips through the cracks.
       </p>
       <p className="italic text-center">
         "Start using <strong>DevTodo</strong> today and stay on top of your
