@@ -1,4 +1,5 @@
 import moment from "moment";
+import * as crypto from "crypto";
 
 export const refactorRepositoryList = (repositoryList: any[]) => {
   let repos = repositoryList.map((repo) => {
@@ -50,4 +51,21 @@ Issue Created using **[DevTODO](${process.env.APP_URL})**
   `;
 
   return res;
+};
+
+/**
+ * Verifies the Github signature of the incoming request.
+ *
+ * @param {Request} req - the incoming request object
+ * @return {boolean} true if the signature is verified, false otherwise
+ */
+export const handleVerifyGithubSignature = (req: Request) => {
+  const GITHUB_WEBHOOK_SECRET: string = process.env.GITHUB_WEBHOOK_SECRET!;
+  const signature = crypto
+    .createHmac("sha256", GITHUB_WEBHOOK_SECRET)
+    .update(JSON.stringify(req.body))
+    .digest("hex");
+  let trusted = Buffer.from(`sha256=${signature}`, "ascii");
+  let untrusted = Buffer.from(req.headers.get("x-hub-signature-256")!, "ascii");
+  return crypto.timingSafeEqual(trusted, untrusted);
 };
