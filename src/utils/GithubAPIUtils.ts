@@ -59,11 +59,11 @@ Issue Created using **[DevTODO](${process.env.APP_URL})**
  * @param {Request} req - the incoming request object
  * @return {boolean} true if the signature is verified, false otherwise
  */
-export const handleVerifyGithubSignature = (req: Request) => {
+export const handleVerifyGithubSignature = (req: Request, body: any) => {
   const GITHUB_WEBHOOK_SECRET: string = process.env.GITHUB_WEBHOOK_SECRET!;
   const signature = crypto
     .createHmac("sha256", GITHUB_WEBHOOK_SECRET)
-    .update(JSON.stringify(req.body))
+    .update(JSON.stringify(body))
     .digest("hex");
   let trusted = Buffer.from(`sha256=${signature}`, "ascii");
   let untrusted = Buffer.from(req.headers.get("x-hub-signature-256")!, "ascii");
