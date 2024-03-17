@@ -177,7 +177,7 @@ export const handleOpenGithubIssueInRepo = async (data: any) => {
         payload,
         authorizationConf(token as string)
       );
-      return { data: res.data?.content };
+      return { data: res.data };
     } else {
       throw new Error(
         "No access token found. Please sign out and sign in again"
