@@ -37,9 +37,9 @@ const BlobCardHeader: React.FC<IProps> = (props): React.ReactElement => {
         <a
           href={url}
           target="_blank"
-          className="hover:cursor-pointer hover:text-primaryColor"
+          className="px-2 py-1 text-black rounded-lg flex items-center justify-center gap-2 bg-buttonBgColor hover:cursor-pointer hover:font-md"
         >
-          <FaExternalLinkAlt size={16} />
+          View File <FaExternalLinkAlt size={16} />
         </a>
       </div>
     </div>
