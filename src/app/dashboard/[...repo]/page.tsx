@@ -3,9 +3,8 @@ import BlobCard from "@/components/BlobCard";
 import moment from "moment";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { useRouter } from "next/router";
 import React from "react";
-import { FaUserPlus, FaUserClock } from "react-icons/fa";
+import { FaUserPlus, FaCodeBranch } from "react-icons/fa";
 
 interface IProp {
   params: { repo: string };
@@ -35,12 +34,12 @@ const Repo: React.FC<IProp> = async ({
         <div className="w-full h-fit flex flex-col  md:flex-row md:items-center md:justify-start gap-4 mb-2">
           <span className="font-bold text-2xl">{repoObj?.data?.name}</span>
           <div className="flex flex-row items-center justify-between gap-3 text-slate-500 text-xs dark:text-slate-400">
-            <div className=" flex items-center gap-1 ">
+            {/* <div className=" flex items-center gap-1 ">
               <FaUserPlus size={15} />
               {`Created At: ${moment(repoObj?.data?.created_at).fromNow()}`}
-            </div>
+            </div> */}
             <div className="flex items-center gap-1">
-              <FaUserClock size={15} />
+              <FaCodeBranch size={15} />
               {`Last Pushed: ${moment(repoObj?.data?.pushed_at).fromNow()}`}
             </div>
           </div>
