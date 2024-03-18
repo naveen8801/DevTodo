@@ -50,6 +50,18 @@ export const refactorRepositorySearchResultList = (
   });
 };
 
+export const refactorGetRepoContent = (data: any) => {
+  return {
+    language: data?.language || "",
+    created_at: data?.created_at,
+    pushed_at: data?.pushed_at,
+    isPrivate: data?.private || false,
+    name: data?.name,
+    full_name: data?.full_name,
+    description: data?.description,
+  };
+};
+
 export const buildGitHubIssueBody = (data: any): string => {
   const { owner, name, path, url }: any = data;
 

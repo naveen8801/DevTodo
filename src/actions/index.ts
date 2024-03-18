@@ -3,6 +3,7 @@ import User from "@/User";
 import connectDB from "@/utils/ConnectDB";
 import {
   buildGitHubIssueBody,
+  refactorGetRepoContent,
   refactorRepositoryList,
   refactorRepositorySearchResultList,
 } from "@/utils/GithubAPIUtils";
@@ -133,7 +134,38 @@ export const handleSearchRepo = async (repoId: string) => {
 };
 
 /**
- * Function to fetch repo
+ * Retrieves information about a repository.
+ *
+ * @param {string} repoId - The ID of the repository.
+ * @param {string} owner - The owner of the repository.
+ * @return {Promise<{ data: any } | { error: string }>} - The repository data or an error message.
+ */
+export const handleGetRepo = async (repoId: string, owner: string) => {
+  try {
+    if (!repoId) {
+      throw new Error("No repoId passed");
+    }
+    const { token }: any = await getServerSession(config);
+    if (token) {
+      const fullRepoId = repoId;
+      const res = await githubAPI.get(
+        `/repos/${owner}/${repoId}`,
+        authorizationConf(token as string)
+      );
+      const refactoredResult = refactorGetRepoContent(res.data || []);
+      return { data: refactoredResult };
+    } else {
+      throw new Error(
+        "No access token found. Please sign out and sign in again"
+      );
+    }
+  } catch (error) {
+    return { error: error!.toString() };
+  }
+};
+
+/**
+ * Function to fetch Blob
  *
  * @param {string} blob_url - Blob URL to fetch
  * @return {Promise<{ data: any } | { error: string }>} Response from github API
