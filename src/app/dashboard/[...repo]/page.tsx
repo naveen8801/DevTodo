@@ -1,4 +1,5 @@
 import {
+  checkIfPullRequestScanningEnabled,
   handleGetRepo,
   handlePullRequestScanningInDB,
   handleSearchRepo,
@@ -27,10 +28,16 @@ const Repo: React.FC<IProp> = async ({
     redirect("/login");
   }
 
+  // Fetch repo object
   const repoObj = await handleGetRepo(repo[1], repo[0]);
   if (repoObj?.error) {
   }
 
+  // Check if pull request scanning is enabled
+  const { pull_request_scanning_enabled = false } =
+    await checkIfPullRequestScanningEnabled(repoObj?.data?.full_name);
+
+  // Scan repo for TODOs
   const { data, error } = await handleSearchRepo(`${repo[0]}/${repo[1]}`);
 
   const handleEnablePullRequestScanning = async (val: boolean) => {
@@ -60,8 +67,9 @@ const Repo: React.FC<IProp> = async ({
           <div className="flex items-center gap-1">
             <EnableComponent
               label="Enable Pull Request Scanning"
-              checked={false}
+              checked={pull_request_scanning_enabled}
               handleChange={handleEnablePullRequestScanning}
+              onSuccessMsg={`Pull Request Scanning successfully updated for ${repoObj?.data?.full_name}`}
             />
           </div>
           {/* <div className="flex items-center gap-1">

@@ -244,10 +244,14 @@ export const handlePullRequestScanningInDB = async (
         throw new Error("No user found. Please sign out and sign in again");
       }
       let scan_pull_request = existingUser.scan_pull_request! || [];
+      if (val != true && val != false) {
+        throw new Error("Unsupported value passed");
+      }
       if (val === true) {
         let idx = scan_pull_request.findIndex(
           (i: any) => i?.repoName === repoId
         );
+        console.log({ idx });
         if (idx === -1) {
           scan_pull_request.push({ repoName: repoId });
         } else {
@@ -273,10 +277,46 @@ export const handlePullRequestScanningInDB = async (
         },
         {
           scan_pull_request,
-        },
-        { new: true }
+        }
       );
-      return { data: newUser?._doc?.scan_pull_request || [] };
+      revalidatePath(`/dashboard/${repoId}`);
+      return { data: scan_pull_request || [] };
+    } else {
+      throw new Error(
+        "No access token found. Please sign out and sign in again"
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    return { error: error!.toString() };
+  }
+};
+
+/**
+ * Checks if pull request scanning is enabled for a given repository.
+ *
+ * @param {string} repoId - The ID of the repository to check for pull request scanning.
+ * @return {Object} Object indicating if pull request scanning is enabled or not.
+ */
+export const checkIfPullRequestScanningEnabled = async (repoId: string) => {
+  try {
+    const session: any = await getServerSession(config);
+    if (session) {
+      await connectDB();
+      const { email } = session?.user;
+      const existingUser = await User.findOne({
+        email,
+      });
+      if (!existingUser) {
+        throw new Error("No user found. Please sign out and sign in again");
+      }
+      let scan_pull_request = existingUser.scan_pull_request! || [];
+      let idx = scan_pull_request.findIndex((i: any) => i?.repoName === repoId);
+      if (idx === -1) {
+        return { pull_request_scanning_enabled: false };
+      } else {
+        return { pull_request_scanning_enabled: true };
+      }
     } else {
       throw new Error(
         "No access token found. Please sign out and sign in again"
