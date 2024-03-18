@@ -31,7 +31,7 @@ const Repo: React.FC<IProp> = async ({
   return (
     <div className=" h-full box-border rounded-lg p-4 overflow-auto">
       <div className="mb-4">
-        <div className="w-full h-fit flex flex-col  md:flex-row md:items-center md:justify-start gap-4 mb-2">
+        <div className="w-full h-fit flex flex-col md:flex-row md:items-center md:justify-start gap-4 mb-2">
           <span className="font-bold text-2xl">{repoObj?.data?.name}</span>
           <div className="flex flex-row items-center justify-between gap-3 text-slate-500 text-xs dark:text-slate-400">
             {/* <div className=" flex items-center gap-1 ">
@@ -43,6 +43,14 @@ const Repo: React.FC<IProp> = async ({
               {`Last Pushed: ${moment(repoObj?.data?.pushed_at).fromNow()}`}
             </div>
           </div>
+          <div className="flex items-center gap-1">
+            <input type="checkbox" />
+            <label className="text-sm">Enable Pull Request Scanning</label>
+          </div>
+          {/* <div className="flex items-center gap-1">
+            <input type="checkbox" />
+            <label className="text-sm">Enable Weekly Email Notifications</label>
+          </div> */}
         </div>
         <p className="text-sm text-slate-500 dark:text-slate-400">
           {repoObj?.data?.description}
