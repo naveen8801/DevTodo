@@ -81,6 +81,8 @@ export async function POST(req: Request) {
           { status: 200 }
         );
       }
+
+      // Get files with TODOs and total files count
       const { totalFilesCount, filesWithTODOs } =
         await searchTODOsInsideFilesFromGithubPR(
           installation?.id,
@@ -89,8 +91,10 @@ export async function POST(req: Request) {
           owner?.login
         );
 
+      // Generate body for github comment
       const body = generateBodyForPRComment(totalFilesCount, filesWithTODOs);
 
+      // Create comment on PR
       const res = await openCommentOnGithubPR(
         installation?.id,
         parseInt(number),
