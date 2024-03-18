@@ -114,7 +114,7 @@ export const handleSearchRepo = async (repoId: string) => {
     if (token) {
       const fullRepoId = repoId;
       const res = await githubAPI.get(
-        `search/code?q= TODO +repo:${encodeURIComponent(fullRepoId)}`,
+        `search/code?q= TODO: +repo:${encodeURIComponent(fullRepoId)}`,
         authorizationConf(token as string)
       );
 

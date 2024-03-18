@@ -5,6 +5,13 @@ import axios from "axios";
 import connectDB from "./ConnectDB";
 import User from "@/User";
 
+const githubAPI = axios.create({
+  baseURL: "https://api.github.com",
+  headers: {
+    Accept: "application/vnd.github.v3+json",
+  },
+});
+
 export const refactorRepositoryList = (repositoryList: any[]) => {
   let repos = repositoryList.map((repo) => {
     return {
@@ -102,54 +109,49 @@ export const getJWT = async () => {
 };
 
 /**
- * Retrieves GitHub access tokens for each installation ID and returns them in an array.
+ * Retrieves a GitHub access token for a specific installation ID.
  *
- * @return {any[]} Array of GitHub access tokens
+ * @param {string} installation_id - The ID of the installation to retrieve the access token for.
+ * @return {Promise<string>} The access token for the specified installation ID.
  */
-const getGithubAccessTokens = async () => {
+const getGithubAccessTokenForInstallation = async (installation_id: string) => {
   const jwt = await getJWT();
   const headers = {
     Accept: "application/vnd.github.v3+json",
     Authorization: `Bearer ${jwt}`,
   };
-  const installationIdsList: string[] = await getAllInstallationIdsFromDB();
-  const accessTokenList: any[] = [];
-  for (let i = 0; i < installationIdsList?.length; i++) {
-    const installationId = installationIdsList[i];
-    if (installationId) {
-      const url = `https://api.github.com/app/installations/${installationId}/access_tokens`;
-      const { data }: any = await axios.post(url, "", { headers });
-      accessTokenList.push(data?.token);
-    }
+  if (installation_id) {
+    const url = `https://api.github.com/app/installations/${installation_id}/access_tokens`;
+    const { data }: any = await axios.post(url, "", { headers });
+    return data?.token;
   }
-  return accessTokenList;
+  return null;
 };
 
 /**
- * Retrieves all installation IDs from the database.
+ * Retrieves TODOs for a GitHub repository using access token.
  *
- * @return {Array<string>} An array of installation IDs
+ * @param {string} installation_id - The ID of the installation.
+ * @param {string} repoId - The ID of the repository.
+ * @return {Promise<any>} The refactored result of TODOs for the repository.
  */
-const getAllInstallationIdsFromDB = async () => {
-  await connectDB();
-  const users = await User.find();
-  return users?.map((u: any) => {
-    return u?.installationId || "";
-  });
-};
-
-export const getAllGithubRepositories = async () => {
-  const access_tokens = await getGithubAccessTokens();
-  const repositories = [];
-  for (let i = 0; i < access_tokens.length; i++) {
-    const token = access_tokens[i];
-    const headers = {
-      Accept: "application/vnd.github.v3+json",
-      Authorization: `token ${token}`,
-    };
-    const url = `https://api.github.com/installation/repositories`;
-    const repos = await axios.get(url, { headers });
-    repositories.push(...(repos?.data?.repositories || []));
-  }
-  return repositories;
+export const getTODOsForGithubRepoUsingAccessToken = async (
+  installation_id: string,
+  repoId: string
+) => {
+  const access_token = await getGithubAccessTokenForInstallation(
+    installation_id
+  );
+  const headers = {
+    Accept: "application/vnd.github.v3+json",
+    Authorization: `token ${access_token}`,
+  };
+  const res = await githubAPI.get(
+    `search/code?q= TODO: +repo:${encodeURIComponent(repoId)}`,
+    { headers }
+  );
+  const refactoredResult = refactorRepositorySearchResultList(
+    res.data?.items || []
+  );
+  return refactoredResult;
 };
