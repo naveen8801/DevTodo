@@ -54,11 +54,11 @@ export const config = {
           });
           if (!existingUser) {
             const newUser = User.create({
-              id: user?.id,
+              id: user?.id || "",
               name: user.name!,
               email: user.email!,
               avatar: user.image!,
-              username: user.username!,
+              username: user.username! || "",
             });
             await newUser.create();
             console.log("User created successfully in DB");
