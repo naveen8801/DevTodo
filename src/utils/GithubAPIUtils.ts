@@ -147,9 +147,7 @@ export const getTODOsForGithubRepoUsingAccessToken = async (
     Authorization: `token ${access_token}`,
   };
   const res = await githubAPI.get(
-    `search/code?q= TODO: +repo:${encodeURIComponent(
-      repoId
-    )}`,
+    `search/code?q= TODO: +repo:${encodeURIComponent(repoId)}`,
     { headers }
   );
   const refactoredResult = refactorRepositorySearchResultList(
@@ -158,12 +156,23 @@ export const getTODOsForGithubRepoUsingAccessToken = async (
   return refactoredResult;
 };
 
-const createGithubCommitComment = async (
+/**
+ * Function to open a comment on a GitHub pull request.
+ *
+ * @param {string} installation_id - The installation ID for GitHub.
+ * @param {number} pr_number - The pull request number.
+ * @param {string} repoId - The repository ID.
+ * @param {string} owner - The owner of the repository.
+ * @param {string} body - The comment body.
+ */
+export const openCommentOnGithubPR = async (
   installation_id: string,
-  repo: string,
-  owner: String,
-  commit_sha: string
+  pr_number: number,
+  repoId: string,
+  owner: string,
+  body: string
 ) => {
+  // Get access token
   const access_token = await getGithubAccessTokenForInstallation(
     installation_id
   );
@@ -171,9 +180,74 @@ const createGithubCommitComment = async (
     Accept: "application/vnd.github.v3+json",
     Authorization: `token ${access_token}`,
   };
-  const res = await githubAPI.post(
-    `/repos/${owner}/${repo}/commits/${commit_sha}/comments`,
 
+  const res = await githubAPI.post(
+    `/repos/${owner}/${repoId}/issues/${pr_number}/comments`,
+    { owner: "DevTODO", body: body, repo: repoId, issue_number: pr_number },
     { headers }
   );
+};
+
+/**
+ * Searches for TODOs inside files from a GitHub Pull Request.
+ *
+ * @param {string} installation_id - The installation ID for GitHub access.
+ * @param {number} pr_number - The Pull Request number.
+ * @param {string} repoId - The repository ID.
+ * @param {string} owner - The owner of the repository.
+ * @return {Array} An array of objects containing information about files with TODO comments.
+ */
+export const searchTODOsInsideFilesFromGithubPR = async (
+  installation_id: string,
+  pr_number: number,
+  repoId: string,
+  owner: string
+) => {
+  // Get access token
+  const access_token = await getGithubAccessTokenForInstallation(
+    installation_id
+  );
+  const headers = {
+    Accept: "application/vnd.github.v3+json",
+    Authorization: `token ${access_token}`,
+  };
+
+  // Get all files from PR
+  const res = await githubAPI.get(
+    `/repos/${owner}/${repoId}/pulls/${pr_number}/files`,
+    { headers }
+  );
+  const files = res?.data || [];
+  let result = [];
+
+  // Get content of each file
+  for (let i = 0; i < files?.length; i++) {
+    let content_url = files[i]?.contents_url;
+    if (content_url) {
+      const { data } = await githubAPI.get(content_url, {
+        headers,
+      });
+      result.push({
+        name: data?.name,
+        path: data?.path,
+        data: atob(data?.content || ""),
+        url: data?.html_url,
+      });
+    }
+  }
+
+  // Search TODO inside content
+  for (let i = 0; i < result.length; i++) {
+    let data: any = result[i]?.data;
+    if (data?.includes("TODO:")) {
+      result[i] = {
+        ...result[i],
+        isTodoCommentFound: true,
+      };
+    }
+  }
+  return {
+    totalFilesCount: result?.length,
+    filesWithTODOs: result?.filter((f: any) => f?.isTodoCommentFound === true),
+  };
 };

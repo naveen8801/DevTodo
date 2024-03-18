@@ -1,13 +1,52 @@
 import {
-  getTODOsForGithubRepoUsingAccessToken,
+  searchTODOsInsideFilesFromGithubPR,
   handleVerifyGithubSignature,
+  openCommentOnGithubPR,
 } from "@/utils/GithubAPIUtils";
+
+/**
+ * A function to generate the body for a pull request comment.
+ *
+ * @param {number} totalFiles - the total number of files scanned
+ * @param {any} filesWithTODOs - an array of files with TODOs
+ * @return {string} the generated message for the pull request comment
+ */
+const generateBodyForPRComment = (totalFiles: number, filesWithTODOs: any) => {
+  let tmp = "";
+  filesWithTODOs?.length > 0
+    ? filesWithTODOs?.forEach((file: any) => {
+        tmp += `| ${file?.name} | ${file?.path} | [link](${file?.url}) |\n`;
+      })
+    : "";
+
+  let message = `
+  **Total Files Scanned: ${totalFiles}**
+  **Files With TODOs: ${filesWithTODOs?.length}**
+
+  ${
+    filesWithTODOs?.length > 0
+      ? `
+  **Details:**
+
+  | File Name | File Path | URL |
+  | --- | --- | --- |
+  ${tmp}
+`
+      : ""
+  }
+
+  Thanks
+  Generated using **[DevTODO](${process.env.APP_URL})**
+  `;
+
+  return message;
+};
 
 export async function POST(req: Request) {
   try {
     const eventData = await req.json();
     const eventType = req.headers.get("X-GitHub-Event");
-    console.log({ eventType });
+
     if (!eventType) {
       return Response.json(
         { msg: "Invalid or no event type found !" },
@@ -34,8 +73,6 @@ export async function POST(req: Request) {
       ["opened", "synchronize"].includes(eventData?.action)
     ) {
       const { repository, installation, number, pull_request } = eventData;
-      const { head } = pull_request;
-      const { ref } = head;
       const { name, full_name, owner } = repository;
 
       if (!installation || !installation?.id) {
@@ -44,18 +81,29 @@ export async function POST(req: Request) {
           { status: 200 }
         );
       }
-      const result = await getTODOsForGithubRepoUsingAccessToken(
+      const { totalFilesCount, filesWithTODOs } =
+        await searchTODOsInsideFilesFromGithubPR(
+          installation?.id,
+          parseInt(number),
+          name,
+          owner?.login
+        );
+
+      const body = generateBodyForPRComment(totalFilesCount, filesWithTODOs);
+
+      const res = await openCommentOnGithubPR(
         installation?.id,
-        full_name
+        parseInt(number),
+        name,
+        owner?.login,
+        body
       );
-      console.log({ result });
       return Response.json({ msg: "Event handled" }, { status: 200 });
     }
 
     // Else send `Event not handled` message
     return Response.json({ msg: "Event not handled" }, { status: 200 });
   } catch (error) {
-    // console.log(error);
     return Response.json({ msg: error?.toString() }, { status: 500 });
   }
 }
