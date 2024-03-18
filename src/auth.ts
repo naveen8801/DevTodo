@@ -3,11 +3,19 @@ import type {
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, DefaultUser } from "next-auth";
 import { getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import User from "@/User";
 import connectDB from "@/utils/ConnectDB";
+
+declare module "next-auth" {
+  interface User {
+    // Add your additional properties here:
+    id?: string | null;
+    username?: string | null;
+  }
+}
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -16,6 +24,15 @@ export const config = {
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
+      profile(profile) {
+        return {
+          id: profile.id.toString(),
+          name: profile.name || profile.login,
+          email: profile.email,
+          image: profile.avatar_url,
+          username: profile.login,
+        };
+      },
     }),
   ],
   callbacks: {
@@ -37,12 +54,27 @@ export const config = {
           });
           if (!existingUser) {
             const newUser = User.create({
+              id: user?.id,
               name: user.name!,
               email: user.email!,
               avatar: user.image!,
+              username: user.username!,
             });
             await newUser.create();
             console.log("User created successfully in DB");
+          } else {
+            const username = user.username!;
+            const id = user.id!;
+            const newUser = await User.findOneAndUpdate(
+              {
+                email: user.email!,
+              },
+              {
+                username,
+                id,
+              }
+            );
+            console.log("User updated successfully in DB");
           }
         } catch (error) {
           console.log(error);
