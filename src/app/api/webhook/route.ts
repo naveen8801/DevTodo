@@ -50,7 +50,6 @@ export async function POST(req: Request) {
       });
 
       const repositories = await getAllGithubRepositories();
-      console.log({ repositories });
       return Response.json({ msg: "Event handled" }, { status: 200 });
     }
 
@@ -65,7 +64,7 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
   try {
     const repositories = await getAllGithubRepositories();
-    return Response.json({ msg: "Done !" }, { status: 200 });
+    return Response.json({ msg: repositories }, { status: 200 });
   } catch (error) {
     console.log({ error });
     return Response.json({ msg: "Done !" }, { status: 200 });

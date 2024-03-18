@@ -79,7 +79,7 @@ export const handleVerifyGithubSignature = (req: Request, body: any) => {
  *
  * @return {string} The encoded JWT.
  */
-export const getJWT = () => {
+export const getJWT = async () => {
   const now = Math.floor(Date.now() / 1000) - 30;
   const exp = now + 60 * 10; // JWT expiration time (10 minute maximum)
   const payload = {
@@ -91,12 +91,9 @@ export const getJWT = () => {
     iss: process.env.GITHUB_APP_ID!,
   };
 
-  // Generate a key pair
-  const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-    modulusLength: 2048,
-    // publicKeyEncoding: { type: "spki", format: "pem" },
-    // privateKeyEncoding: { type: "pkcs8", format: "pem" },
-  });
+  // Fetch PEM file from cloud storage
+  const { data } = await axios.get(process.env.GITHUB_PEM_FILE_URL!);
+  const privateKey = data;
 
   const encoded_jwt = jwt.sign(payload, privateKey, {
     algorithm: "RS256",
@@ -110,7 +107,7 @@ export const getJWT = () => {
  * @return {any[]} Array of GitHub access tokens
  */
 const getGithubAccessTokens = async () => {
-  const jwt = getJWT();
+  const jwt = await getJWT();
   const headers = {
     Accept: "application/vnd.github.v3+json",
     Authorization: `Bearer ${jwt}`,
@@ -152,7 +149,7 @@ export const getAllGithubRepositories = async () => {
     };
     const url = `https://api.github.com/installation/repositories`;
     const repos = await axios.get(url, { headers });
-    repositories.push(...repos?.data);
+    repositories.push(...(repos?.data?.repositories || []));
   }
   return repositories;
 };
