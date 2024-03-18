@@ -25,8 +25,8 @@ const Repo: React.FC<IProp> = async ({
 
   return (
     <div className=" h-full box-border rounded-lg p-4 overflow-auto">
-      {data?.length! === 0 && (
-        <span className="text-slate-500 text-xs font-semibold dark:text-slate-400 mb-2">
+      {data?.length === 0 && (
+        <span className="text-slate-500 text-xs font-semibold dark:text-slate-400 mb-2 text-center">
           No TODOs Found !
         </span>
       )}
