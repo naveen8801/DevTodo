@@ -13,7 +13,6 @@ const RepositoryList: React.FC<IProp> = async (
   props
 ): Promise<React.ReactElement> => {
   const { installation_id, searchValue } = props;
-
   const { data, error } = await handleGetRepositoryList(installation_id);
 
   //   if (error) {
