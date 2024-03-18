@@ -1,5 +1,25 @@
 const mongoose = require("mongoose");
 
+// Sub schema for scan_pull_request key
+var scan_pull_request_Schema = new mongoose.Schema(
+  {
+    repoName: {
+      type: String,
+    },
+  },
+  { _id: false }
+);
+
+// Sub schema for email_weekly_notification key
+var email_weekly_notification_Schema = new mongoose.Schema(
+  {
+    repoName: {
+      type: String,
+    },
+  },
+  { _id: false }
+);
+
 const schema = new mongoose.Schema(
   {
     id: {
@@ -27,11 +47,8 @@ const schema = new mongoose.Schema(
     installationId: {
       type: String,
     },
-    scan_pull_request: [{ repoName: String }],
-    email_notification: {
-      type: Boolean,
-      default: false,
-    },
+    scan_pull_request: [scan_pull_request_Schema],
+    email_weekly_notification: [email_weekly_notification_Schema],
   },
   { timestamps: true }
 );

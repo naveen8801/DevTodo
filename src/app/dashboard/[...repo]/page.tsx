@@ -1,5 +1,10 @@
-import { handleGetRepo, handleSearchRepo } from "@/actions";
+import {
+  handleGetRepo,
+  handlePullRequestScanningInDB,
+  handleSearchRepo,
+} from "@/actions";
 import BlobCard from "@/components/BlobCard";
+import EnableComponent from "@/components/EnableComponent";
 import moment from "moment";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -28,6 +33,15 @@ const Repo: React.FC<IProp> = async ({
 
   const { data, error } = await handleSearchRepo(`${repo[0]}/${repo[1]}`);
 
+  const handleEnablePullRequestScanning = async (val: boolean) => {
+    "use server";
+    const { data, error } = await handlePullRequestScanningInDB(
+      val,
+      repoObj?.data?.full_name
+    );
+    return { data, error };
+  };
+
   return (
     <div className=" h-full box-border rounded-lg p-4 overflow-auto">
       <div className="mb-4">
@@ -44,8 +58,11 @@ const Repo: React.FC<IProp> = async ({
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <input type="checkbox" />
-            <label className="text-sm">Enable Pull Request Scanning</label>
+            <EnableComponent
+              label="Enable Pull Request Scanning"
+              checked={false}
+              handleChange={handleEnablePullRequestScanning}
+            />
           </div>
           {/* <div className="flex items-center gap-1">
             <input type="checkbox" />

@@ -220,3 +220,70 @@ export const handleOpenGithubIssueInRepo = async (data: any) => {
     return { error: error!.toString() };
   }
 };
+
+/**
+ * Asynchronously enable/disable the scanning of pull requests in the database based on the provided value and repository ID.
+ *
+ * @param {boolean} val - The value indicating whether to enable or disable pull request scanning
+ * @param {string} repoId - The ID of the repository
+ * @return {Promise<any>} A promise that resolves to an object containing the scanned pull requests or an error message
+ */
+export const handlePullRequestScanningInDB = async (
+  val: boolean,
+  repoId: string
+) => {
+  try {
+    const session: any = await getServerSession(config);
+    if (session) {
+      await connectDB();
+      const { email } = session?.user;
+      const existingUser = await User.findOne({
+        email,
+      });
+      if (!existingUser) {
+        throw new Error("No user found. Please sign out and sign in again");
+      }
+      let scan_pull_request = existingUser.scan_pull_request! || [];
+      if (val === true) {
+        let idx = scan_pull_request.findIndex(
+          (i: any) => i?.repoName === repoId
+        );
+        if (idx === -1) {
+          scan_pull_request.push({ repoName: repoId });
+        } else {
+          throw new Error(
+            "Pull request scanning is already enabled for this repository"
+          );
+        }
+      } else if (val === false) {
+        let idx = scan_pull_request.findIndex(
+          (i: any) => i?.repoName === repoId
+        );
+        if (idx !== -1) {
+          scan_pull_request.splice(idx, 1);
+        } else {
+          throw new Error(
+            "Pull request scanning is not enabled for this repository"
+          );
+        }
+      }
+      const newUser = await User.findOneAndUpdate(
+        {
+          email,
+        },
+        {
+          scan_pull_request,
+        },
+        { new: true }
+      );
+      return { data: newUser?._doc?.scan_pull_request || [] };
+    } else {
+      throw new Error(
+        "No access token found. Please sign out and sign in again"
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    return { error: error!.toString() };
+  }
+};
