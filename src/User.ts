@@ -25,7 +25,7 @@ const schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// TODO: verify it
+// TODO: verify it again
 
 mongoose.models = {};
 
