@@ -147,11 +147,33 @@ export const getTODOsForGithubRepoUsingAccessToken = async (
     Authorization: `token ${access_token}`,
   };
   const res = await githubAPI.get(
-    `search/code?q= TODO: +repo:${encodeURIComponent(repoId)}`,
+    `search/code?q= TODO: +repo:${encodeURIComponent(
+      repoId
+    )}`,
     { headers }
   );
   const refactoredResult = refactorRepositorySearchResultList(
     res.data?.items || []
   );
   return refactoredResult;
+};
+
+const createGithubCommitComment = async (
+  installation_id: string,
+  repo: string,
+  owner: String,
+  commit_sha: string
+) => {
+  const access_token = await getGithubAccessTokenForInstallation(
+    installation_id
+  );
+  const headers = {
+    Accept: "application/vnd.github.v3+json",
+    Authorization: `token ${access_token}`,
+  };
+  const res = await githubAPI.post(
+    `/repos/${owner}/${repo}/commits/${commit_sha}/comments`,
+
+    { headers }
+  );
 };

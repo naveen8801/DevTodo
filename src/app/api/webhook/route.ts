@@ -28,14 +28,16 @@ export async function POST(req: Request) {
       return Response.json({ msg: "Event not handled" }, { status: 200 });
     }
 
-    // Handle `create` or `pull_request` event type
+    // Handle `pull_request` event type
     if (
-      eventType === "create" ||
-      (eventType === "pull_request" && ["branch"].includes(eventData?.ref_type))
+      eventType === "pull_request" &&
+      ["opened", "synchronize"].includes(eventData?.action)
     ) {
-      const { ref, repository, ref_type, installation } = eventData;
+      const { repository, installation, number, pull_request } = eventData;
+      const { head } = pull_request;
+      const { ref } = head;
       const { name, full_name, owner } = repository;
-      const isPrivate = repository?.private || false;
+
       if (!installation || !installation?.id) {
         return Response.json(
           { msg: "Installation not found in the event payload" },
@@ -47,30 +49,6 @@ export async function POST(req: Request) {
         full_name
       );
       console.log({ result });
-      return Response.json({ msg: "Event handled" }, { status: 200 });
-    }
-
-    // Handle `push` or `pull_request` event type
-    if (
-      eventType === "push" ||
-      (eventType === "pull_request" &&
-        ["opened", "synchronize"].includes(eventData?.action))
-    ) {
-      const { ref, repository, head_commit, installation } = eventData;
-      const { name, full_name, owner } = repository;
-      const { message, timestamp, url } = head_commit;
-      const isPrivate = repository?.private || false;
-
-      if (!installation || !installation?.id) {
-        return Response.json(
-          { msg: "Installation not found in the event payload" },
-          { status: 200 }
-        );
-      }
-      const result = await getTODOsForGithubRepoUsingAccessToken(
-        installation?.id,
-        full_name
-      );
       return Response.json({ msg: "Event handled" }, { status: 200 });
     }
 
