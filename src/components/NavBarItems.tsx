@@ -3,6 +3,7 @@ import ThemeSwitcher from "@/utils/ThemeSwitcher";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const NavBarItems: React.FC = (): React.ReactElement => {
@@ -23,7 +24,7 @@ const NavBarItems: React.FC = (): React.ReactElement => {
       {isAuthenticated && (
         <button
           onClick={async () => {
-            await signOut();
+            await signOut({ callbackUrl: "/" });
           }}
           className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor"
         >
