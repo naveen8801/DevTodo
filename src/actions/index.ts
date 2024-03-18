@@ -251,7 +251,6 @@ export const handlePullRequestScanningInDB = async (
         let idx = scan_pull_request.findIndex(
           (i: any) => i?.repoName === repoId
         );
-        console.log({ idx });
         if (idx === -1) {
           scan_pull_request.push({ repoName: repoId });
         } else {
@@ -280,7 +279,7 @@ export const handlePullRequestScanningInDB = async (
         }
       );
       revalidatePath(`/dashboard/${repoId}`);
-      return { data: scan_pull_request || [] };
+      return { data: "" || [] };
     } else {
       throw new Error(
         "No access token found. Please sign out and sign in again"
