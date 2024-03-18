@@ -62,7 +62,7 @@ export const config = {
             });
             await newUser.create();
             console.log("User created successfully in DB");
-          } else {
+          } else if (!existingUser?.username || !existingUser?.id) {
             const username = user.username!;
             const id = user.id!;
             const newUser = await User.findOneAndUpdate(
