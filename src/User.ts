@@ -21,6 +21,11 @@ const schema = new mongoose.Schema(
     installationId: {
       type: String,
     },
+    scan_pull_request: [{ repoName: String }],
+    email_notification: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
