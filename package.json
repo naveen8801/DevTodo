@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-email/components": "^0.0.15",
+    "@react-email/render": "^0.0.12",
     "axios": "^1.6.7",
     "crypto": "^1.0.1",
     "jsonwebtoken": "^9.0.2",
