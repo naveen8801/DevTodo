@@ -50,7 +50,10 @@ const WelcomeEmailTemplate: React.FC<Readonly<IProps>> = (
             <br />
             Naveen
           </Text>
-          {/* <Hr style={hr} /> */}
+          <Hr style={hr} />
+          <Text style={footer}>
+            © Copyright 2024 DevTodo. All rights reserved
+          </Text>
         </Container>
       </Body>
     </Html>
@@ -110,4 +113,9 @@ const logo = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+};
+
+const footer = {
+  color: "#8898aa",
+  fontSize: "12px",
 };
