@@ -26,7 +26,7 @@ const Repo: React.FC<IProp> = async ({
 
   // If no session then redirect to login
   if (!session) {
-    redirect("/login");
+    redirect("/");
   }
 
   // Fetch repo object

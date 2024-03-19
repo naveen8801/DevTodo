@@ -22,7 +22,7 @@ const Dashboard = async ({ searchParams }: { searchParams: ISearchParams }) => {
 
   // If no session then redirect to login
   if (!session) {
-    redirect("/login");
+    redirect("/");
   }
 
   // If installation_id is present in searchParams then return InstallationHandler method to update user obj with installation id in DB

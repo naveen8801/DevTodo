@@ -1,10 +1,9 @@
 "use client";
 import ThemeSwitcher from "@/utils/ThemeSwitcher";
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import React from "react";
+import { FaGithub } from "react-icons/fa";
 
 const NavBarItems: React.FC = (): React.ReactElement => {
   const session = useSession();
@@ -14,11 +13,14 @@ const NavBarItems: React.FC = (): React.ReactElement => {
   return (
     <div className="flex items-center justify-center gap-8">
       {!isAuthenticated && (
-        <Link href="/login">
-          <div className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor">
-            Sign In
-          </div>
-        </Link>
+        <div
+          onClick={async () => {
+            await signIn("github");
+          }}
+          className="text-lg font-semibold hover:font-bold hover:cursor-pointer hover:text-primaryColor flex items-center justify-center gap-2"
+        >
+          <FaGithub size={20} /> Sign In
+        </div>
       )}
 
       {isAuthenticated && (
