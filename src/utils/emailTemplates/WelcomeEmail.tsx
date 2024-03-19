@@ -16,7 +16,9 @@ interface IProps {
   name: string;
 }
 
-const WelcomeEmailTemplate: React.FC<IProps> = (props): React.ReactElement => {
+const WelcomeEmailTemplate: React.FC<Readonly<IProps>> = (
+  props
+): React.ReactElement => {
   const { name } = props;
   const baseUrl = process.env.APP_URL;
   return (
