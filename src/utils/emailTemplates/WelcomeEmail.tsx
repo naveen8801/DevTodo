@@ -50,7 +50,7 @@ const WelcomeEmailTemplate: React.FC<Readonly<IProps>> = (
             <br />
             Naveen
           </Text>
-          <Hr style={hr} />
+          {/* <Hr style={hr} /> */}
         </Container>
       </Body>
     </Html>
