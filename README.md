@@ -12,7 +12,6 @@ DevTodo is a simple tool that scans your GitHub repository for TODO comments in 
 - Never Miss a Todo Comment Again :)
 - Scan pull requests for TODOs comments
 - Open github Issue for each individual TODO directly from dashboard
-- Enable weekly email notification for all your TODOs comments
 
 
 ## Tech Stack
