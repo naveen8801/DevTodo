@@ -7,6 +7,10 @@ DevTodo is a simple tool that scans your GitHub repository for TODO comments in 
 - [Dashboard](https://dev-todo-naveen8801.vercel.app/)
 - [Github App](https://github.com/apps/devtodos/)
 
+# Quick Demo
+
+<img src="https://github.com/naveen8801/DevTodo/blob/main/src/assets/dev-todo.gif" alt="gif" width="90%">
+
 ## Features
 
 - Never Miss a Todo Comment Again :)
