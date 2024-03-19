@@ -64,12 +64,22 @@ const Repo: React.FC<IProp> = async ({
               {`Last Pushed: ${moment(repoObj?.data?.pushed_at).fromNow()}`}
             </div>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-3">
             <EnableComponent
               label="Enable Pull Request Scanning"
               checked={pull_request_scanning_enabled}
               handleChange={handleEnablePullRequestScanning}
-              onSuccessMsg={`Pull Request Scanning successfully updated for ${repoObj?.data?.full_name}`}
+              onSuccessMsg={`Pull Request Scanning ${
+                pull_request_scanning_enabled ? "disabled" : "enabled"
+              } successfully for ${repoObj?.data?.full_name}`}
+            />
+            <EnableComponent
+              label="Enable Weekly Email Report"
+              checked={pull_request_scanning_enabled}
+              handleChange={handleEnablePullRequestScanning}
+              onSuccessMsg={`Weekly report ${
+                pull_request_scanning_enabled ? "disabled" : "enabled"
+              } successfully for ${repoObj?.data?.full_name}`}
             />
           </div>
           {/* <div className="flex items-center gap-1">
