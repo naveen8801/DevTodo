@@ -33,6 +33,7 @@ const WelcomeEmailTemplate: React.FC<Readonly<IProps>> = (
               <span style={span}>Todo</span>
             </div>
           </div>
+          <Hr style={hr} />
           <Text style={paragraph}>Hi {name},</Text>
           <Text style={paragraph}>
             Welcome to DevTodo, the platform with help of which you can easily
@@ -106,4 +107,7 @@ const button = {
 
 const logo = {
   margin: "0 auto",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
