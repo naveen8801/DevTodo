@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import User from "@/User";
 import connectDB from "@/utils/ConnectDB";
+import sendEmail from "./utils/sendEmail";
 
 declare module "next-auth" {
   interface User {
@@ -52,6 +53,7 @@ export const config = {
           const existingUser = await User.findOne({
             email: user.email!,
           });
+
           if (!existingUser) {
             const newUser = User.create({
               id: user?.id || "",
@@ -61,7 +63,13 @@ export const config = {
               username: user.username! || "",
             });
             await newUser.create();
-            console.log("User created successfully in DB");
+
+            // Send email on user create
+            const { msg, error } = await sendEmail({
+              receiverEmail: user.email!,
+              data: { name: user?.name },
+              emailType: "WELCOME",
+            });
           } else if (!existingUser?.username || !existingUser?.id) {
             const username = user.username!;
             const id = user.id!;

@@ -45,9 +45,8 @@ const getEmailBodyBasedOnType = (
 
 const generateMailData = (emailPayload: any) => {
   const { receiverEmail, data, emailType } = emailPayload;
-  const { email } = data;
 
-  if (!email) {
+  if (!receiverEmail) {
     throw new Error("Invalid receiver email");
   }
 
@@ -58,7 +57,7 @@ const generateMailData = (emailPayload: any) => {
   const subject = getEmailSubjectBasedOnType(emailType);
 
   const mailOptions = {
-    from: process.env.EMAIL,
+    from: { addres: process.env.EMAIL },
     to: receiverEmail,
     html: emailHtml,
     subject: subject,
@@ -67,32 +66,33 @@ const generateMailData = (emailPayload: any) => {
   return { mailOptions };
 };
 
-exports.sendEmail = async (emailPayload: any) => {
-  const { receiverEmail, receiverName, data, emailType } = emailPayload;
+const sendEmail = async (emailPayload: {
+  receiverEmail: string;
+  data: any;
+  emailType: "WELCOME" | "WEEKLY_REPORT";
+}): Promise<any> => {
+  try {
+    const { receiverEmail, data, emailType } = emailPayload;
+    if (!receiverEmail || !data || !emailType) {
+      throw new Error(
+        "Receiver's email, email type & data not passed correctly"
+      );
+    } else {
+      let { mailOptions } = generateMailData(emailPayload);
 
-  if (!receiverEmail || !receiverName || !data || !emailType) {
-    return {
-      error: "Receiver's email, email type & data not passed correctly",
-    };
-  } else {
-    let { mailOptions } = generateMailData(emailPayload);
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
-    await new Promise((resolve, reject) => {
-      transporter.sendMail(mailOptions, function (error: any, info: any) {
-        if (error) {
-          throw new Error(error);
-        } else {
-          return { msg: "Email sent successfully" };
-        }
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_PASSWORD,
+        },
       });
-    });
+      const mail = await transporter.sendMail(mailOptions);
+      return { msg: "Email sent successfully" };
+    }
+  } catch (error) {
+    return { error };
   }
 };
+
+export default sendEmail;
