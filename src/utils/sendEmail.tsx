@@ -57,7 +57,7 @@ const generateMailData = (emailPayload: any) => {
   const subject = getEmailSubjectBasedOnType(emailType);
 
   const mailOptions = {
-    from: { addres: process.env.EMAIL },
+    from: { name: "DevTodo", address: process.env.EMAIL },
     to: receiverEmail,
     html: emailHtml,
     subject: subject,

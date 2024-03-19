@@ -53,7 +53,6 @@ export const config = {
           const existingUser = await User.findOne({
             email: user.email!,
           });
-
           if (!existingUser) {
             const newUser = User.create({
               id: user?.id || "",
