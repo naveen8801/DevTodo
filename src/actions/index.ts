@@ -292,12 +292,14 @@ export const handlePullRequestScanningInDB = async (
 };
 
 /**
- * Checks if pull request scanning is enabled for a given repository.
+ * Checks if pull request scanning and weekly report is enabled for a given repository.
  *
  * @param {string} repoId - The ID of the repository to check for pull request scanning.
  * @return {Object} Object indicating if pull request scanning is enabled or not.
  */
-export const checkIfPullRequestScanningEnabled = async (repoId: string) => {
+export const checkIfPullRequestScanningAndWeeklyReportEnabled = async (
+  repoId: string
+) => {
   try {
     const session: any = await getServerSession(config);
     if (session) {
@@ -310,12 +312,86 @@ export const checkIfPullRequestScanningEnabled = async (repoId: string) => {
         throw new Error("No user found. Please sign out and sign in again");
       }
       let scan_pull_request = existingUser.scan_pull_request! || [];
+      let weekly_email_report = existingUser.weekly_email_report! || [];
+      let pull_request_scanning_enabled = false;
+      let weekly_report_enabled = false;
       let idx = scan_pull_request.findIndex((i: any) => i?.repoName === repoId);
-      if (idx === -1) {
-        return { pull_request_scanning_enabled: false };
-      } else {
-        return { pull_request_scanning_enabled: true };
+      let idx_report = weekly_email_report.findIndex(
+        (i: any) => i?.repoName === repoId
+      );
+      if (idx !== -1) {
+        pull_request_scanning_enabled = true;
       }
+      if (idx_report !== -1) {
+        weekly_report_enabled = true;
+      }
+
+      return { pull_request_scanning_enabled, weekly_report_enabled };
+    } else {
+      throw new Error(
+        "No access token found. Please sign out and sign in again"
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    return { error: error!.toString() };
+  }
+};
+
+/**
+ * Handles updating the user's weekly report settings in the database for a repo.
+ *
+ * @param {boolean} val - The new value for weekly report (true to enable, false to disable)
+ * @param {string} repoId - The ID of the repository
+ * @return {object} An object containing either an empty string or an empty array
+ */
+export const handleWeeklyReportInDB = async (val: boolean, repoId: string) => {
+  try {
+    const session: any = await getServerSession(config);
+    if (session) {
+      await connectDB();
+      const { email } = session?.user;
+      const existingUser = await User.findOne({
+        email,
+      });
+      if (!existingUser) {
+        throw new Error("No user found. Please sign out and sign in again");
+      }
+      let weekly_email_report = existingUser.weekly_email_report! || [];
+      if (val != true && val != false) {
+        throw new Error("Unsupported value passed");
+      }
+      if (val === true) {
+        let idx = weekly_email_report.findIndex(
+          (i: any) => i?.repoName === repoId
+        );
+        if (idx === -1) {
+          weekly_email_report.push({ repoName: repoId });
+        } else {
+          throw new Error(
+            "Weekly report is already enabled for this repository"
+          );
+        }
+      } else if (val === false) {
+        let idx = weekly_email_report.findIndex(
+          (i: any) => i?.repoName === repoId
+        );
+        if (idx !== -1) {
+          weekly_email_report.splice(idx, 1);
+        } else {
+          throw new Error("Weekly report is not enabled for this repository");
+        }
+      }
+      const newUser = await User.findOneAndUpdate(
+        {
+          email,
+        },
+        {
+          weekly_email_report,
+        }
+      );
+      revalidatePath(`/dashboard/${repoId}`);
+      return { data: "" || [] };
     } else {
       throw new Error(
         "No access token found. Please sign out and sign in again"

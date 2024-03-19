@@ -10,8 +10,8 @@ var scan_pull_request_Schema = new mongoose.Schema(
   { _id: false }
 );
 
-// Sub schema for email_weekly_notification key
-var email_weekly_notification_Schema = new mongoose.Schema(
+// Sub schema for weekly_email_report key
+var weekly_email_report_Schema = new mongoose.Schema(
   {
     repoName: {
       type: String,
@@ -48,7 +48,7 @@ const schema = new mongoose.Schema(
       type: String,
     },
     scan_pull_request: [scan_pull_request_Schema],
-    email_weekly_notification: [email_weekly_notification_Schema],
+    weekly_email_report: [weekly_email_report_Schema],
   },
   { timestamps: true }
 );

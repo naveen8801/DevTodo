@@ -1,8 +1,9 @@
 import {
-  checkIfPullRequestScanningEnabled,
+  checkIfPullRequestScanningAndWeeklyReportEnabled,
   handleGetRepo,
   handlePullRequestScanningInDB,
   handleSearchRepo,
+  handleWeeklyReportInDB,
 } from "@/actions";
 import BlobCard from "@/components/BlobCard";
 import EnableComponent from "@/components/EnableComponent";
@@ -34,8 +35,12 @@ const Repo: React.FC<IProp> = async ({
   }
 
   // Check if pull request scanning is enabled
-  const { pull_request_scanning_enabled = false } =
-    await checkIfPullRequestScanningEnabled(repoObj?.data?.full_name);
+  const {
+    pull_request_scanning_enabled = false,
+    weekly_report_enabled = false,
+  } = await checkIfPullRequestScanningAndWeeklyReportEnabled(
+    repoObj?.data?.full_name
+  );
 
   // Scan repo for TODOs
   const { data, error } = await handleSearchRepo(`${repo[0]}/${repo[1]}`);
@@ -43,6 +48,15 @@ const Repo: React.FC<IProp> = async ({
   const handleEnablePullRequestScanning = async (val: boolean) => {
     "use server";
     const { data, error } = await handlePullRequestScanningInDB(
+      val,
+      repoObj?.data?.full_name
+    );
+    return { data, error };
+  };
+
+  const handleEnableWeeklyReport = async (val: boolean) => {
+    "use server";
+    const { data, error } = await handleWeeklyReportInDB(
       val,
       repoObj?.data?.full_name
     );
@@ -75,10 +89,10 @@ const Repo: React.FC<IProp> = async ({
             />
             <EnableComponent
               label="Enable Weekly Email Report"
-              checked={pull_request_scanning_enabled}
-              handleChange={handleEnablePullRequestScanning}
+              checked={weekly_report_enabled}
+              handleChange={handleEnableWeeklyReport}
               onSuccessMsg={`Weekly report ${
-                pull_request_scanning_enabled ? "disabled" : "enabled"
+                weekly_report_enabled ? "disabled" : "enabled"
               } successfully for ${repoObj?.data?.full_name}`}
             />
           </div>
