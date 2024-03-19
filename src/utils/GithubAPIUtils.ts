@@ -141,15 +141,15 @@ const getGithubAccessTokenForInstallation = async (installation_id: string) => {
 };
 
 /**
- * Retrieves TODOs for a GitHub repository using access token.
+ * Retrieves TODOs for GitHub repositories using access token.
  *
- * @param {string} installation_id - The ID of the installation.
- * @param {string} repoId - The ID of the repository.
- * @return {Promise<any>} The refactored result of TODOs for the repository.
+ * @param {string} installation_id - The installation ID for GitHub.
+ * @param {string[]} repoIds - An array of repository IDs.
+ * @return {Promise<any[]>} An array of refactored TODO results.
  */
-export const getTODOsForGithubRepoUsingAccessToken = async (
+export const getTODOsForGithubReposUsingAccessToken = async (
   installation_id: string,
-  repoId: string
+  repoIds: string[]
 ) => {
   const access_token = await getGithubAccessTokenForInstallation(
     installation_id
@@ -158,14 +158,21 @@ export const getTODOsForGithubRepoUsingAccessToken = async (
     Accept: "application/vnd.github.v3+json",
     Authorization: `token ${access_token}`,
   };
-  const res = await githubAPI.get(
-    `search/code?q= TODO: +repo:${encodeURIComponent(repoId)}`,
-    { headers }
-  );
-  const refactoredResult = refactorRepositorySearchResultList(
-    res.data?.items || []
-  );
-  return refactoredResult;
+
+  let results: { [key: string]: any } = {};
+  for (let i = 0; i < repoIds?.length; i++) {
+    const res = await githubAPI.get(
+      `search/code?q= TODO: +repo:${encodeURIComponent(repoIds[i])}`,
+      { headers }
+    );
+    const refactoredResult = refactorRepositorySearchResultList(
+      res.data?.items || []
+    );
+    if (refactoredResult) {
+      results[repoIds[i]] = refactoredResult;
+    }
+  }
+  return results;
 };
 
 /**

@@ -87,14 +87,14 @@ const Repo: React.FC<IProp> = async ({
                 pull_request_scanning_enabled ? "disabled" : "enabled"
               } successfully for ${repoObj?.data?.full_name}`}
             />
-            <EnableComponent
+            {/* <EnableComponent
               label="Enable Weekly Email Report"
               checked={weekly_report_enabled}
               handleChange={handleEnableWeeklyReport}
               onSuccessMsg={`Weekly report ${
                 weekly_report_enabled ? "disabled" : "enabled"
               } successfully for ${repoObj?.data?.full_name}`}
-            />
+            /> */}
           </div>
           {/* <div className="flex items-center gap-1">
             <input type="checkbox" />
