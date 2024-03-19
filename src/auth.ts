@@ -49,6 +49,11 @@ export const config = {
     async signIn({ user, account }) {
       if (account?.provider === "github") {
         await connectDB();
+        const { msg, error } = await sendEmail({
+          receiverEmail: user.email!,
+          data: { name: user?.name },
+          emailType: "WELCOME",
+        });
         try {
           const existingUser = await User.findOne({
             email: user.email!,

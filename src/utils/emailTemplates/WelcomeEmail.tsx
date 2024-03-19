@@ -28,9 +28,9 @@ const WelcomeEmailTemplate: React.FC<Readonly<IProps>> = (
       <Body style={main}>
         <Container style={container}>
           <div style={logo}>
-            <div className="text-3xl font-extrabold">
-              <span className="text-primaryColor">Dev</span>
-              <span>Todo</span>
+            <div style={mainTitle}>
+              <span>Dev</span>
+              <span style={span}>Todo</span>
             </div>
           </div>
           <Text style={paragraph}>Hi {name},</Text>
@@ -58,6 +58,16 @@ const WelcomeEmailTemplate: React.FC<Readonly<IProps>> = (
 
 export default WelcomeEmailTemplate;
 
+const mainTitle = {
+  color: "#FF4C29",
+  fontSize: "1.875rem",
+  fontWeight: 800,
+};
+
+const span = {
+  color: "black",
+};
+
 const hr = {
   borderColor: "#cccccc",
   margin: "20px 0",
@@ -84,7 +94,7 @@ const paragraph = {
 };
 
 const button = {
-  backgroundColor: "#9ADE7B",
+  backgroundColor: "#FF4C29",
   borderRadius: "3px",
   color: "#fff",
   fontSize: "16px",
