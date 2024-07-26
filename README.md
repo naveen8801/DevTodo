@@ -20,7 +20,7 @@ DevTodo is a simple tool that scans your GitHub repository for TODO comments in 
 
 ## Tech Stack
 
-NextJS, MongoDB
+TypeScript, NextJS, Tailwind, MongoDB
 
 ## Run Locally
 
